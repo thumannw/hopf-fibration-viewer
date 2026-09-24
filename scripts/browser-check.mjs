@@ -21,7 +21,7 @@ const state=()=>page.evaluate(()=>window.hopfExplorer.getState());
 const ready=()=>page.waitForFunction(()=>window.hopfExplorer?.ready);
 const screenshot=name=>page.screenshot({path:resolve(results,name+'.png'),fullPage:true});
 try {
-  await page.goto(pathToFileURL(resolve(root,'hopf-explorer.html')).href);await ready();
+  await page.goto(pathToFileURL(resolve(root,'index.html')).href);await ready();
   assert.equal((await summary()).fibres,16);await screenshot('latitude-desktop');
   console.log('PASS: standalone file loads with network disabled.');
 

@@ -4,7 +4,7 @@ A portable, interactive explorer of the Hopf fibration under stereographic proje
 
 ## Open it
 
-Double-click **`hopf-explorer.html`**, or open it from your browser's File → Open menu. Copy this one file to another computer to use it there. No installation, server, internet connection, or CDN is needed. Use a current desktop browser with WebGL 2 enabled.
+Double-click **`index.html`**, or open it from your browser's File → Open menu. Copy this one file to another computer to use it there. No installation, server, internet connection, or CDN is needed. Use a current desktop browser with WebGL 2 enabled.
 
 The HTML includes all code, styles, and the Three.js renderer. The files under `src/`, `scripts/`, and `tests/` are for editing and rebuilding, not required to run the finished explorer.
 
@@ -116,7 +116,7 @@ pnpm test
 
 `package.json` declares Three.js 0.180.0 as an application dependency, and esbuild 0.25.10 and Playwright 1.62.1 as development dependencies. `pnpm-lock.yaml` records their exact resolved versions and integrity hashes. Keep it in Git alongside `package.json`; dependencies installed in `node_modules/` are ignored. `pnpm-workspace.yaml` allows esbuild's installation script to prepare its native executable.
 
-`pnpm build` runs `scripts/build.mjs`, which bundles the application and Three.js, embeds styles and the Three.js MIT license, and writes `hopf-explorer.html`. The HTML remains a standalone file that runs offline without Node, pnpm, a server, or additional files. The generated HTML is kept in Git so it is ready to open after checkout. Rebuild it after source changes.
+`pnpm build` runs `scripts/build.mjs`, which bundles the application and Three.js, embeds styles and the Three.js MIT license, and writes `index.html` in the repository root. The HTML remains a standalone file that runs offline without Node, pnpm, a server, or additional files. The generated HTML is kept in Git so it is ready to open after checkout or serve with GitHub Pages. Rebuild it after source changes.
 
 ### Browser checks
 
@@ -145,7 +145,7 @@ Source map:
 - `src/state.js`: bounded configuration validation and presets.
 - `src/app.js`: Three.js scenes, linked selection, controls, file import/export.
 - `src/index.html`, `src/styles.css`: accessible interface and responsive layout.
-- `scripts/build.mjs`: bundles everything into `hopf-explorer.html`.
+- `scripts/build.mjs`: bundles everything into `index.html`.
 - `tests/`: quaternion correspondence, equal spacing, deduplication, pole limits, clipping and configuration validation.
 
 The build preserves a standalone IIFE script, so it works at a `file://` URL without module-loading restrictions. All geometry is generated locally; the output has no external assets or fonts.

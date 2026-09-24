@@ -40,7 +40,7 @@ const upload=async(config,name='rotation.json')=>{
 try {
   await page.clock.install({time:new Date('2026-01-01T00:00:00Z')});
   await page.clock.pauseAt(new Date('2026-01-01T00:00:00Z'));
-  await page.goto(pathToFileURL(resolve(root,'hopf-explorer.html')).href);
+  await page.goto(pathToFileURL(resolve(root,'index.html')).href);
   await page.waitForFunction(()=>window.hopfExplorer?.ready);await tick(32);
   const initial=await readState();
   assert.equal((await summary()).playing,false);

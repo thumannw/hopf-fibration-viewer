@@ -26,5 +26,5 @@ const html = template
   .replace('/* APP_STYLES */', () => styles)
   .replace('/* APP_SCRIPT */', () => script)
   + `\n<!-- Third-party license: Three.js ${JSON.parse(metadata).version}\n${license}\n-->\n`;
-await writeFile(new URL('hopf-explorer.html', root), html);
-console.log(`Built hopf-explorer.html (${Buffer.byteLength(html).toLocaleString('en-US')} bytes). Open it directly in a browser.`);
+await writeFile(new URL('index.html', root), html);
+console.log(`Built index.html (${Buffer.byteLength(html).toLocaleString('en-US')} bytes). Open it directly in a browser.`);
