@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="An offline interactive explorer of the Hopf fibration, with linked base sphere and projected fibre views.">
+  <title>Hopf Explorer</title>
+  <style>/* APP_STYLES */</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="identity"><div class="mark" aria-hidden="true">◎</div><div><h1>Hopf Explorer</h1><p>A sphere of linked circles</p></div></div>
+  <div class="header-actions"><span class="offline">Offline · self-contained</span><button id="save">Save configuration</button><button id="load">Load</button><button id="about-open" aria-label="About the geometry and controls">About</button></div>
+  <input id="load-file" type="file" accept=".json,application/json" hidden>
+</header>
+<main>
+  <div class="intro"><div><p class="eyebrow">EXPLORE THE HOPF FIBRATION</p><h2>Choose points. Discover their fibres.</h2><p>Each point on the sphere corresponds to one complete circle in space—or the line through infinity.</p></div></div>
+  <div class="workspace">
+    <aside class="sidebar" aria-label="Geometry controls">
+      <section class="presets"><h3>Start with a family</h3><div class="preset-grid"><button data-preset="torus">Latitude torus</button><button data-preset="south">Through south</button><button data-preset="poles">Pole to pole</button><button data-preset="crossing">Two meridians</button></div></section>
+      <section><div class="section-heading"><h3>Base selections</h3><span id="selection-count" class="small"></span></div><div id="selection-list"></div><div class="add-row"><button id="add-selection">+ Add circle</button></div></section>
+      <section id="editor"><div class="section-heading"><h3>Edit selection</h3><span id="active-label" class="small"></span></div>
+        <div class="field"><label for="selection-name">Name <span>optional</span></label><input id="selection-name" type="text" maxlength="60" placeholder="Add a name" autocomplete="off"></div>
+        <div class="field"><label for="azimuth">Axis azimuth <span>0–360°</span></label><div class="range-row"><input id="azimuth" type="range" min="0" max="360" step="1" aria-describedby="axis-hint"><input id="azimuth-number" aria-label="Axis azimuth in degrees" type="number" min="0" max="360" step="1" aria-describedby="axis-hint"></div></div>
+        <div class="field"><label for="elevation">Axis elevation <span>−90° to +90°</span></label><div class="range-row"><input id="elevation" type="range" min="-90" max="90" step="0.5"><input id="elevation-number" aria-label="Axis elevation in degrees" type="number" min="-90" max="90" step="0.5"></div></div>
+        <p class="hint" id="axis-hint"></p>
+        <div class="field"><label for="offset">Centre offset <span>0 = great circle</span></label><div class="range-row"><input id="offset" type="range" min="-1" max="1" step="0.01" aria-describedby="offset-hint"><input id="offset-number" aria-label="Circle centre offset" type="number" min="-1" max="1" step="0.01" aria-describedby="offset-hint"></div></div>
+        <p class="hint" id="offset-hint">Signed distance along the axis. At −1 or +1 the circle becomes a point.</p>
+        <div class="field"><label for="start">Start angle <span>degrees</span></label><div class="range-row"><input id="start" type="range" min="0" max="360" step="1"><input id="start-number" aria-label="Start angle in degrees" type="number" min="0" max="360" step="1"></div></div>
+        <div class="field"><label for="span">Arc length <span>360° = full circle</span></label><div class="range-row"><input id="span" type="range" min="1" max="360" step="1"><input id="span-number" aria-label="Arc length in degrees" type="number" min="1" max="360" step="1"></div></div>
+        <div class="field"><label for="count">Number of points <span>equally spaced</span></label><div class="range-row"><input id="count" type="range" min="2" max="64" step="1"><input id="count-number" aria-label="Number of sample points" type="number" min="2" max="64" step="1"></div></div>
+        <label class="check"><input id="endpoints" type="checkbox">Include both arc endpoints</label><p class="hint" id="sampling-hint"></p>
+      </section>
+      <section><h3>Display</h3><div class="field"><label for="clip">Viewing sphere radius <output id="clip-value"></output></label><input id="clip" type="range" min="0.5" max="10" step="0.1" value="4"></div><div class="field"><label for="thickness">Fibre thickness <output id="thickness-value"></output></label><input id="thickness" type="range" min="0.004" max="0.06" step="0.001" value="0.018"></div><label class="check"><input id="guides" type="checkbox" checked>Coordinate guides</label><label class="check"><input id="boundary" type="checkbox">Show viewing boundary</label></section>
+    </aside>
+    <div class="visual-area">
+      <section class="motion-bar" aria-label="Base rotation">
+        <div class="motion-layout">
+        <div id="rotation-dial-slot"></div>
+        <div class="motion-heading"><h3>Base rotation</h3><span id="rotation-status" class="small">Paused · X axis · forward</span></div>
+        <div class="motion-controls">
+          <label class="motion-axis" for="rotation-axis">Axis<select id="rotation-axis"><option value="x">X · j</option><option value="y">Y · k</option><option value="z">Z · i</option></select></label>
+          <button id="rotation-play" aria-pressed="false">Play</button>
+          <label class="motion-speed" for="rotation-speed"><span>Speed <output id="rotation-speed-value">20°/s</output></span><input id="rotation-speed" type="range" min="1" max="90" step="1" value="20"></label>
+          <button id="rotation-reverse" aria-pressed="false">Reverse</button>
+          <button id="rotation-reset">Reset orientation</button>
+        </div>
+        <p class="hint" id="rotation-dial-help">Rotates all selections about fixed axes. Axis changes keep the pose and reset the dial to 0°. Drag or enter degrees to adjust and pause.</p>
+        </div>
+      </section>
+      <div class="view-grid">
+        <section class="view-panel base-panel" aria-labelledby="base-title"><div class="panel-heading"><div><span class="eyebrow">THE BASE</span><h3 id="base-title">Sphere S²</h3></div><button id="base-reset" class="quiet">Reset view</button></div><div class="viewport" id="base-viewport"><span class="pole-label" id="north-label">N · line</span><span class="pole-label" id="south-label">S · unit circle</span></div><div class="panel-caption">Click a point to find its fibre.</div></section>
+        <section class="view-panel fibre-panel" aria-labelledby="fibres-title"><div class="panel-heading"><div><span class="eyebrow">STEREOGRAPHIC PROJECTION</span><h3 id="fibres-title">Fibres in ℝ³</h3></div><div class="view-actions"><button id="top-view" class="quiet">Top</button><button id="front-view" class="quiet">Front</button><button id="fit-view" class="quiet">Fit</button></div></div><div class="viewport" id="fibre-viewport"><span id="scene-status" class="scene-status"></span></div><div class="panel-caption"><span>Drag to orbit · scroll to zoom · right-drag to pan</span><button id="image-save" class="text-button">Save image ↗</button></div></section>
+      </div>
+      <section class="inspector" aria-label="Selected fibre"><div class="inspector-heading"><label for="fibre-select">Inspect a fibre</label><select id="fibre-select"><option value="">Choose on either view</option></select><label class="check"><input id="isolated" type="checkbox">Isolate selected</label><button id="clear-selection" class="quiet">Clear</button></div><div id="fibre-details" aria-live="polite">Select a point or a fibre to see the correspondence.</div></section>
+      <div class="footer-note"><span id="totals" aria-live="polite"></span><span>Lengths use the equatorial unit circle as reference.</span></div>
+      <div id="message" role="status" aria-live="polite"></div>
+      <div id="startup-error" role="alert" hidden></div>
+    </div>
+  </div>
+</main>
+<dialog id="about"><div class="dialog-heading"><h2>Geometry & controls</h2><button id="about-close" aria-label="Close about dialog">Close</button></div><p>This explorer uses <strong>h(q) = qiq⁻¹</strong> and right multiplication q exp(ti). For q = a + bi + cj + dk, stereographic projection is <strong>(x, y, z) = (c, d, b) / (1 + a)</strong>. Thus 1 maps to the origin, and −1 to infinity.</p><p>The base sphere has coordinates (j, k, i). North (+i) corresponds to the z-axis. South (−i) corresponds to the unit circle in the x-y plane. All other fibres are exact planar circles.</p><p>All selections use the same circle controls. Add a circle, select its numbered entry, and optionally enter a name in the editor. Clear the name to return to a numbered entry. Names are saved with the configuration. The family examples use these same controls.</p><p><strong>Circles</strong> use axis azimuth (0° = +X, 90° = +Y), elevation above the XY plane, and a signed centre offset from −1 to +1. Offset 0 gives a great circle; at either endpoint it collapses to one point and one fibre. Arc settings are retained while disabled. Start 0° is the circle point nearest north; positive angles follow the right-hand rule about the positive axis. At exactly vertical axes, azimuth is ignored and retained, and start 0° uses +X. This fixed pole convention can change the arc reference abruptly on reaching a vertical axis. Angular sweep is measured around the circle, so 180° always selects half of it.</p><p>Points are equally spaced in arc length on the selected base circle. Full circles do not repeat the endpoint. Partial arcs include both endpoints when checked, and use interval midpoints otherwise. Shared points are merged. Circles at offset ±1 collapse to one point.</p><p>The root disc is a coordinate model of the base: its entire boundary represents south. If θ is colatitude on S², the root-disc radius is r = tan(θ/4). Equal radial steps in the disc are not equal angular steps on the sphere.</p><p>The viewing sphere clips fibre centre-lines analytically. Small beads mark clipping endpoints; these are not physical joints. Tubes have a visual thickness and may overlap if made too thick. The north fibre is a line, never a large fake circle. Changing geometry preserves the camera; use Fit when needed.</p><p>Drag either view to rotate it. Scroll or pinch to zoom. Right-drag pans the fibre view. Keyboard: focus a canvas and use arrow keys to orbit, +/− to zoom, and Home to reset or fit. The fibre menu offers keyboard selection.</p><p><strong>Base rotation</strong> applies the same left quaternion action to all selections: h(aq) = a h(q) a⁻¹. X corresponds to exp(θj/2), Y to exp(θk/2), and Z to exp(θi/2), where θ is the angle on the base sphere. Speed is measured in degrees per second on the base sphere. Axis changes continue from the current orientation about the fixed base axes. Reverse changes the direction. Reset orientation pauses and restores the original arrangement without changing the circle definitions or cameras. Colours and selected fibres travel with their points. Playback pauses when the page is hidden.</p><p>The <strong>rotation dial</strong> shows the angle of the current step modulo 360°. Each axis change preserves the pose and resets the dial to 0°. Setting the dial back to 0° restores the pose at the start of this step. Drag or touch the dial, or enter degrees, to pause playback and adjust the viewers immediately. Arrow keys adjust by 1° (Shift: 10°); Page Up/Down by 15°; Home sets 0° and End sets 359°. Negative angles and complete turns wrap around.</p><p>Rotated latitude circles need not remain latitudes. Selection controls always describe the original geometry; the fibre inspector reports current coordinates. The reference sphere, guides, pole labels, and cameras stay fixed. Use Fit or zoom out to leave room for fibres that grow near north.</p><p>Save configuration downloads a JSON file including geometry, rotation settings and both cameras. Loading always pauses playback. Configurations use version 4 and store the circle settings and optional names. The HTML works offline without installation or network requests. Rendering requires a browser with WebGL 2 support.</p><p class="hint">Renderer: Three.js 0.180.0, MIT license. The renderer and its third-party license are embedded in this standalone file.</p></dialog>
+<noscript>This explorer needs JavaScript enabled in your browser.</noscript>
+<script>/* APP_SCRIPT */</script>
+</body>
+</html>

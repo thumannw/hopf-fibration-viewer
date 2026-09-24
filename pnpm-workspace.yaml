@@ -1,0 +1,3 @@
+# esbuild uses its install script to prepare the platform-specific executable.
+allowBuilds:
+  esbuild: true
