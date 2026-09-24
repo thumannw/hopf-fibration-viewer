@@ -1,0 +1,9 @@
+Generated with the built-in image generation tool for the Hopf Explorer README.
+This is an original fictional project mascot, not an official OpenAI logo.
+
+Use case: stylized-concept
+Asset type: small square mascot illustration for the Hopf Explorer GitHub README.
+Primary request: a cute fictional mascot representing GPT-6 Astra, the AI coding collaborator on a Hopf fibration visualizer. A tiny friendly rounded robot with a star-shaped tuft, bright curious eyes, a gentle smile, and one little hand waving. Several colorful interlocking circular loops float around its other hand, inspired by the Hopf fibration. Give it a warm, thoughtful personality.
+Style/medium: polished soft 3D toy illustration, simple silhouette, subtle material texture, charming and readable at 240 pixels wide.
+Composition/framing: one complete character centered with generous margins, square canvas. Pale neutral background that works well in a README. Soft studio lighting.
+Constraints: original character; no official OpenAI logo or other brand marks; no text, letters, watermark, or frame.

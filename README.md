@@ -2,6 +2,16 @@
 
 A portable, interactive explorer of the Hopf fibration under stereographic projection. Select circles or arcs on the base sphere and see their fibres in three-dimensional space.
 
+## Built with GPT-6 Astra
+
+**Almost every line of this project's original code was written by GPT-6 Astra**, through an ongoing collaboration with the human maintainer, who supplied the ideas, requirements, feedback, and testing. This is an AI-written project shaped by human direction. Third-party libraries, including Three.js, are the work of their respective authors.
+
+<p align="center">
+  <img src="assets/astra-mascot.png" width="240" height="240" alt="Astra, a smiling little robot with a star on its head, waving beside colorful linked circles.">
+  <br>
+  <em>Meet Astra, our AI-generated coding mascot.</em>
+</p>
+
 ## Open it
 
 Double-click **`index.html`**, or open it from your browser's File → Open menu. Copy this one file to another computer to use it there. No installation, server, internet connection, or CDN is needed. Use a current desktop browser with WebGL 2 enabled.
